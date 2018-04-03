@@ -1,11 +1,5 @@
 #!/bin/bash
 
-apk=$1
-IFS='/' read -a temp <<< "$apk"
-temp=${temp[-1]}
-name=${temp::-4}
-dir=$( pwd )
-
 green='\033[1;32m'
 end='\033[1;m'
 info='\033[1;33m[!]\033[1;m'
@@ -21,6 +15,20 @@ printf """$green     ___  _
          /___//___//___/  
 
 $end"""
+
+if [ $1 ]
+then
+	:
+else
+	printf "Usage: ./apk.sh <path to apk file>\n"
+	exit
+fi
+
+apk=$1
+IFS='/' read -a temp <<< "$apk"
+temp=${temp[-1]}
+name=${temp::-4}
+dir=$( pwd )
 
 if type "apktool" > /dev/null; then
   :
@@ -83,15 +91,11 @@ regxy () {
 	done
 }
 
-if [ $1 ]
-then
-	printf $"$run Decompiling the apk\n"
-	extract
-	printf $"$run Extracting endpoints\n"
-	grabby
-	regxy
-	printf $"$info Endpoints saved in: $dir/$name.txt\n"
-	exit
-else
-	echo "$greenUsage:$end ./apk.sh <path to apk file>"
-fi
+
+printf $"$run Decompiling the apk\n"
+extract
+printf $"$run Extracting endpoints\n"
+grabby
+regxy
+printf $"$info Endpoints saved in: $dir/$name.txt\n"
+exit
