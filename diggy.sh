@@ -74,13 +74,13 @@ extract () {
 }
 
 grabby () {
-	matches=$( grep -r "[\"]http.*//.*['\"]\|[\"]/.*['\"]" $dir/$name )
+	matches=$( grep -r "['\"]http.*//.*['\"]\|['\"]/.*['\"]" $dir/$name )
 }
 
 regxy () {
 	for x in $matches
 	do
-		final=$(grep -o "[\"]http.*//.*['\"]\|[\"]/.*['\"]" <<< $x)
+		final=$(grep -o "['\"]http.*//.*['\"]\|['\"]/.*['\"]" <<< $x)
 		final=${final//$"\""/}
 		if [ "$final" == "/" ] || [ "$final" == "" ] || [ "$final" == "\"http\"" ] || [ "$final" == "\"https\"" ]
 		then
