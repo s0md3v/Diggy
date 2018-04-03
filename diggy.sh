@@ -29,6 +29,14 @@ IFS='/' read -a temp <<< "$apk"
 temp=${temp[-1]}
 name=${temp::-4}
 dir=$( pwd )
+if [ $dir == "/root" ]
+then
+    decom="/root/Diggy/$name"
+    links="/root/Diggy/$name.txt"
+else
+    decom="$dir/$name"
+    links="$dir/$name.txt"
+fi
 
 if type "apktool" > /dev/null; then
   :
@@ -37,8 +45,7 @@ else
 	exit
 fi
 
-check="$dir/$name"
-if [ -e $check ]
+if [ -e $decom ]
 then
 	printf $"$info Looks like this apk has been decompiled already.\n"
     printf "$que"
@@ -47,14 +54,13 @@ then
     then
     	:
     else
-    	rm -r $check
+    	rm -r $decom
     fi
 else
     :
 fi
 
-check="$dir/$name.txt"
-if [ -e $check ]
+if [ -e $links ]
 then
 	printf $"$info Looks like links have been already extracted from this apk.\n"
 	printf "$que"
@@ -63,18 +69,18 @@ then
     then
     	:
     else
-    	rm $check
+    	rm $links
     fi
 else
     :
 fi
 
 extract () {
-	k=$(apktool d $apk -o $dir/$name)
+	k=$(apktool d $apk -o $decom)
 }
 
 grabby () {
-	matches=$( grep -r "['\"]http.*//.*['\"]\|['\"]/.*['\"]" $dir/$name )
+	matches=$( grep -r "['\"]http.*//.*['\"]\|['\"]/.*['\"]" $decom )
 }
 
 regxy () {
@@ -86,7 +92,7 @@ regxy () {
 		then
 			:
 		else
-			echo "$final" >> "$dir/$name.txt"
+			echo "$final" >> "$links"
 		fi
 	done
 }
@@ -97,5 +103,5 @@ extract
 printf $"$run Extracting endpoints\n"
 grabby
 regxy
-printf $"$info Endpoints saved in: $dir/$name.txt\n"
+printf $"$info Endpoints saved in: $links\n"
 exit
