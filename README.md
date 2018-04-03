@@ -16,3 +16,4 @@ After that, you will be able to run **Diggy** as follows:
 ```
 diggy /path/to/apk/file.apk
 ```
+**Note:** Tthe *installed* script will save the results in **/usr/bin** directory.
