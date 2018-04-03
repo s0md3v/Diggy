@@ -10,4 +10,4 @@ Extract endpoints from apk files.
 #### Usage
 ```
 ./diggy.sh /path/to/apk/file.apk
-``
+```
