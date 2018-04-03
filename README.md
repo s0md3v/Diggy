@@ -1,6 +1,8 @@
 # Diggy
 Extract endpoints from apk files.
+
 ![screenshot](https://i.imgur.com/VJvRst4.png)
+
 
 #### Dependencies
 - apktool
