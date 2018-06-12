@@ -52,9 +52,9 @@ then
     read -p " Decompile over the existing copy? [Y/n] " choice
     if [ choice == "y" ]
     then
-    	:
-    else
     	rm -r $decom
+    else
+    	:
     fi
 else
     :
@@ -67,16 +67,16 @@ then
     read -p " Rewrite the previous result? [Y/n] " choice
     if [ choice == "y" ]
     then
-    	:
-    else
     	rm $links
+    else
+    	:
     fi
 else
     :
 fi
 
 extract () {
-	k=$(apktool d $apk -o $decom)
+	k=$(apktool d $apk -o $decom -q)
 }
 
 grabby () {
@@ -95,6 +95,7 @@ regxy () {
 			echo "$final" >> "$links"
 		fi
 	done
+    awk '!x[$1]++' $links
 }
 
 
