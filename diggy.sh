@@ -18,10 +18,10 @@ $end"""
 
 if [ $1 ]
 then
-	:
+    :
 else
-	printf "Usage: ./apk.sh <path to apk file>\n"
-	exit
+    printf "Usage: ./apk.sh <path to apk file>\n"
+    exit
 fi
 
 apk=$1
@@ -41,20 +41,20 @@ fi
 if type "apktool" > /dev/null; then
   :
 else
-	printf "$bad Diggy requires 'apktool' to be installed."
-	exit
+    printf "$bad Diggy requires 'apktool' to be installed."
+    exit
 fi
 
 if [ -e $decom ]
 then
-	printf $"$info Looks like this apk has been decompiled already.\n"
+    printf $"$info Looks like this apk has been decompiled already.\n"
     printf "$que"
-    read -p " Decompile over the existing copy? [Y/n] " choice
+    read -p " Decompile over the existing copy? [y/N] " choice
     if [ choice == "y" ]
     then
-    	rm -r $decom
+        rm -r $decom
     else
-    	:
+        :
     fi
 else
     :
@@ -62,39 +62,36 @@ fi
 
 if [ -e $links ]
 then
-	printf $"$info Looks like links have been already extracted from this apk.\n"
-	printf "$que"
-    read -p " Rewrite the previous result? [Y/n] " choice
+    printf $"$info Looks like links have been already extracted from this apk.\n"
+    printf "$que"
+    read -p " Rewrite the previous result? [y/N] " choice
     if [ choice == "y" ]
     then
-    	rm $links
+        rm $links
     else
-    	:
+        :
     fi
 else
     :
 fi
 
 extract () {
-	k=$(apktool d $apk -o $decom -q)
-}
-
-grabby () {
-	matches=$( grep -r "['\"]http.*//.*['\"]\|['\"]/.*['\"]" $decom )
+    k=$(apktool d $apk -o $decom -fq)
 }
 
 regxy () {
-	for x in $matches
-	do
-		final=$(grep -o "['\"]http.*//.*['\"]\|['\"]/.*['\"]" <<< $x)
-		final=${final//$"\""/}
-		if [ "$final" == "/" ] || [ "$final" == "" ] || [ "$final" == "\"http\"" ] || [ "$final" == "\"https\"" ]
-		then
-			:
-		else
-			echo "$final" >> "$links"
-		fi
-	done
+    matches=$(grep -ProhI "[\"'\`](https?://|/)[\w\.-/]+[\"'\`]")
+    for final in $matches
+    do
+        final=${final//$"\""/}
+        final=${final//$"'"/}
+        if [ $(echo "$final" | grep "http://schemas.android.com") ] || [ "$final" == "/" ] || [ "$final" == "" ] || [ "$final" == "\"http\"" ] || [ "$final" == "\"https\"" ]
+        then
+            :
+        else
+            echo "$final" >> "$links"
+        fi
+    done
     awk '!x[$1]++' $links
 }
 
@@ -102,7 +99,6 @@ regxy () {
 printf $"$run Decompiling the apk\n"
 extract
 printf $"$run Extracting endpoints\n"
-grabby
 regxy
 printf $"$info Endpoints saved in: $links\n"
 exit
