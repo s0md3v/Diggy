@@ -80,12 +80,12 @@ extract () {
 }
 
 regxy () {
-    matches=$(grep -ProhI "[\"'\`](https?://|/)[\w\.-/]+[\"'\`]")
+    matches=$(grep -ProI "[\"'\`](https?://|/)[\w\.-/]+[\"'\`]")
     for final in $matches
     do
         final=${final//$"\""/}
         final=${final//$"'"/}
-        if [ $(echo "$final" | grep "http://schemas.android.com") ] || [ "$final" == "/" ] || [ "$final" == "" ] || [ "$final" == "\"http\"" ] || [ "$final" == "\"https\"" ]
+        if [ $(echo "$final" | grep "http://schemas.android.com") ]
         then
             :
         else
