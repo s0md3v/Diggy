@@ -80,7 +80,7 @@ extract () {
 }
 
 regxy () {
-    matches=$(grep -ProI "[\"'\`](https?://|/)[\w\.-/]+[\"'\`]")
+    matches=$(grep -ProI "[\"'\`](https?://|/)[\w\.-/]+[\"'\`]" $decom)
     for final in $matches
     do
         final=${final//$"\""/}
